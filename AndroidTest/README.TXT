@@ -1,0 +1,2 @@
+1. cd into AndroidTest Folder
+2. compile AndroidTest.java via the following command with classpathreferencing SensorUDPReceiver.jar:javac -cp .:SensorUDPReceiver.jar AndroidTest.javaNOTE: SensorUDPReceiver.jar library needs to be same place as AndroidTest.java3. run SerialTest by executing the following command:java -cp .:SensorUDPReceiver.jar AndroidTest4. check your console outputNOTE: It does probably not work in University Network. Use WIFI hotspot if this is the case.
