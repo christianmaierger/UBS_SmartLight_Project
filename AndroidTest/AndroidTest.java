@@ -1,5 +1,6 @@
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Scanner;
 
 import de.cmlab.ubicomp.lib.SensorUDPReceiver;
 import de.cmlab.ubicomp.lib.model.AndroidSensor;
@@ -30,22 +31,57 @@ public class 	AndroidTest {
 		@Override
 		public void update(Observable o, Object arg) {
 			/*check SensorUDPReceiver Java Docs for the AndroidSensor API*/
-			AndroidSensor sensorValues = (AndroidSensor)arg;
+			AndroidSensor sensorValues = (AndroidSensor) arg;
 			//System.out.println(sensorValues.toString());
 
-			if (sensorValues.getAmbientlight()>=200 && sensorValues.getAmbientlight()<300) {
-				System.out.println("Jetzt ist es über 200 Lux hell");
-				System.out.println("Der genaue Wert ist: " + sensorValues.getAmbientlight());
+
+			// create a scanner so we can read the command-line input
+			Scanner scanner = new Scanner(System.in);
+
+			//  prompt for the user's input
+			System.out.print("Please hit 1 to start or 2 to close programm: ");
+
+			// get their input as a String
+			String input;
+			int in;
+
+			if (scanner.hasNext()) {
+				input = scanner.next();
+				try {
+					in = Integer.parseInt(input);
+					if (in != 1 && in != 2) {
+						// prompt for their age
+						System.out.println("Yout input was: " + in);
+						System.out.println("Only ! or 2 allowed as input");
+					}
+				}
+				catch (Exception e){
+					return;
+				}
+
+
+
+
+				if (in == 1) {
+
+					if (sensorValues.getAmbientlight() >= 200 && sensorValues.getAmbientlight() < 300) {
+						System.out.println("Jetzt ist es über 200 Lux hell");
+						System.out.println("Der genaue Wert ist: " + sensorValues.getAmbientlight());
+					}
+					if (sensorValues.getAmbientlight() >= 20 && sensorValues.getAmbientlight() < 200) {
+						System.out.println("Jetzt ist es über 20 Lux hell");
+						System.out.println("Der genaue Wert ist: " + sensorValues.getAmbientlight());
+					}
+					if (sensorValues.getAmbientlight() >= 300) {
+						System.out.println("Jetzt ist es über 300 Lux hell");
+						System.out.println("Der genaue Wert ist: " + sensorValues.getAmbientlight());
+					}
+					System.out.println("============================");
+				}
+				if (in == 2) {
+					System.exit(-1);
+				}
 			}
-			if (sensorValues.getAmbientlight()>=20 && sensorValues.getAmbientlight()<200) {
-				System.out.println("Jetzt ist es über 20 Lux hell");
-				System.out.println("Der genaue Wert ist: " + sensorValues.getAmbientlight());
-			}
-			if (sensorValues.getAmbientlight()>=300) {
-				System.out.println("Jetzt ist es über 300 Lux hell");
-				System.out.println("Der genaue Wert ist: " + sensorValues.getAmbientlight());
-			}
-			System.out.println("============================");
 		}
 	
 	}
