@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="SensorUDPReceiver">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/SensorUDPReceiver.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
