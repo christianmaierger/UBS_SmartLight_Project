@@ -47,6 +47,7 @@ public class 	AndroidTest {
 
 			if (scanner.hasNext()) {
 				input = scanner.next();
+
 				try {
 					in = Integer.parseInt(input);
 					if (in != 1 && in != 2) {
@@ -63,18 +64,25 @@ public class 	AndroidTest {
 
 
 				if (in == 1) {
-
-					if (sensorValues.getAmbientlight() >= 200 && sensorValues.getAmbientlight() < 300) {
-						System.out.println("Jetzt ist es über 200 Lux hell");
-						System.out.println("Der genaue Wert ist: " + sensorValues.getAmbientlight());
+					if (sensorValues.getAmbientlight() >= 1 && sensorValues.getAmbientlight() < 20) {
+						System.out.println("At least there is some light");
+						System.out.println("the actual value is: " + sensorValues.getAmbientlight());
+						return;
 					}
 					if (sensorValues.getAmbientlight() >= 20 && sensorValues.getAmbientlight() < 200) {
-						System.out.println("Jetzt ist es über 20 Lux hell");
-						System.out.println("Der genaue Wert ist: " + sensorValues.getAmbientlight());
+						System.out.println("Now light value is over 20 lux");
+						System.out.println("exact value is: " + sensorValues.getAmbientlight());
+						return;
+					}
+					if (sensorValues.getAmbientlight() >= 200 && sensorValues.getAmbientlight() < 300) {
+						System.out.println("Now light value is over 200 lux");
+						System.out.println("exact value is: " + sensorValues.getAmbientlight());
+						return;
 					}
 					if (sensorValues.getAmbientlight() >= 300) {
-						System.out.println("Jetzt ist es über 300 Lux hell");
-						System.out.println("Der genaue Wert ist: " + sensorValues.getAmbientlight());
+						System.out.println("Now light value is over 300 lux");
+						System.out.println("the exact value is: " + sensorValues.getAmbientlight());
+						return;
 					}
 					System.out.println("============================");
 				}
