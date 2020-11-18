@@ -14,26 +14,26 @@
 	<property name="dist" location="./dist"/>
 	<property name="lib" location="./lib"/>
 	<property name="doc" location="./doc"/>
-	<property name="src.files" value="./src/de/cmlab/ubicomp/AndroidTest/AndroidTest.java"/>
+	<property name="src.files" value="./src/*"/>
 	
 	<target name="prepare">
 		<tstamp/>
 		<mkdir dir="${build}"/>
-        <mkdir dir="${build}/lib"/>
-        <mkdir dir="${build}/de/cmlab/ubicomp/AndroidTest"/>
+        <mkdir dir="${build}/lib/de/cmlab/ubicomp/"/>
+        <mkdir dir="${build}/de/cmlab/ubicomp"/>
 	</target>
 
 	<target name="compile" depends="prepare">
-		<javac srcdir="${src}" destdir="${build}" includes="${src.files}" includeantruntime="false">
+		<javac srcdir="${src}" destdir="${build}">
 			<classpath>
-				<pathelement path="${lib}/SensorUDPReceiver.jar"/>
-                <pathelement path="${src}/de/cmlab/ubicomp/AndroidTest/AndroidTest.java"/>
+				<pathelement path="${lib}/de/cmlab/ubicomp/SensorUDPReceiver.jar"/>
 			</classpath>
+           
 		</javac>
 	</target>
 
 	<target name="run" depends="compile">
-		<java classname="de.cmlab.ubicomp.AndroidTest.AndroidTest.class">
+		<java classname="de.cmlab.ubicomp.AndroidTest">
 			<classpath>
 				<pathelement path="${build}"/>
 			</classpath>
@@ -41,10 +41,10 @@
 	</target>
 
 	<target name="dist" depends="compile">
-		<jar destfile="${dist}/de.cmlab.ubicomp.AndroidTest.ant.test.jar" basedir="${build}">
+		<jar destfile="${dist}/de.cmlab.ubicomp.ant.test.jar" basedir="${build}">
 			<manifest>
 				<attribute name="Built-By" value="${group6}" />
-				<attribute name="Main-Class" value="AndroidTest.AndroidTest" />
+				<attribute name="Main-Class" value="AndroidTest" />
 			</manifest>
 		</jar>
 	</target>
