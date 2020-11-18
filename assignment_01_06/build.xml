@@ -13,29 +13,40 @@
 	<property name="build" value="./build"/>
 	<property name="dist" location="./dist"/>
 	<property name="lib" location="./lib"/>
+    <property name="jar.dir" value="${build}/lib/jar"/>
 	<property name="doc" location="./doc"/>
-	<property name="src.files" value="./src/*"/>
-	
+    <property name="main-class" value="de.cmlab.ubicomp.AndroidTest"/>
+
+    <path id="classpath">
+        <fileset dir="${lib}" includes="**/*.jar"/>
+    </path>
+
 	<target name="prepare">
 		<tstamp/>
 		<mkdir dir="${build}"/>
-        <mkdir dir="${build}/lib/de/cmlab/ubicomp/"/>
+        <mkdir dir="${jar.dir}/"/>
         <mkdir dir="${build}/de/cmlab/ubicomp"/>
 	</target>
-
+    
 	<target name="compile" depends="prepare">
-		<javac srcdir="${src}" destdir="${build}">
-			<classpath>
-				<pathelement path="${lib}/de/cmlab/ubicomp/SensorUDPReceiver.jar"/>
-			</classpath>
-           
+		<javac srcdir="${src}" destdir="${build}" classpathref="classpath">
 		</javac>
 	</target>
+    
+    <target name="jar" depends="clean, compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${build}">
+            <manifest>
+                <attribute name="Main-Class" value="${main-class}"/>
+            </manifest>
+        </jar>
+    </target>
 
-	<target name="run" depends="compile">
-		<java classname="de.cmlab.ubicomp.AndroidTest">
+	<target name="run" depends="jar, compile">
+		<java classname="${main-class}" fork="true">
 			<classpath>
-				<pathelement path="${build}"/>
+                <path refid="classpath"/>
+                <path location="${jar.dir}/${ant.project.name}.jar"/>
 			</classpath>
 		</java>
 	</target>
@@ -44,7 +55,7 @@
 		<jar destfile="${dist}/de.cmlab.ubicomp.ant.test.jar" basedir="${build}">
 			<manifest>
 				<attribute name="Built-By" value="${group6}" />
-				<attribute name="Main-Class" value="AndroidTest" />
+				<attribute name="Main-Class" value="de.cmlab.ubicomp.AndroidTest" />
 			</manifest>
 		</jar>
 	</target>
@@ -73,6 +84,6 @@
 		</javadoc>
 	</target>
 
-	<target name="all" depends="clean,prepare,compile,run"/>
+	<target name="all" depends="clean,prepare,compile,jar,run"/>
 
 </project>
