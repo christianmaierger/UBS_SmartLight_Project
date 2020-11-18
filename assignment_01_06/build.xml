@@ -1,0 +1,78 @@
+<!-- HCI Group: Ubiquitous Computing Assignments -->
+<!-- University of Bamberg, Prof. Dr. Tom Gross, Anna-Lena Müller -->
+<!-- Group 6, Christian Maier, Paul MÜller, Jessie Dos Santos, Corina Lehmann -->
+<!-- Build file for the UbiComp assignment: 1. Smartphone Sensors and Actuators -->
+<!-- ************************************************************ -->
+
+<project name="AndroidTest>" default="compile" basedir=".">
+	<description>
+		Get to know android smartphone sensors and actuators
+    </description>
+
+	<property name="src" value="./src"/>
+	<property name="build" value="./build"/>
+	<property name="dist" location="./dist"/>
+	<property name="lib" location="./lib"/>
+	<property name="doc" location="./doc"/>
+	<property name="src.files" value="./src/de/cmlab/ubicomp/AndroidTest/AndroidTest.java"/>
+	
+	<target name="prepare">
+		<tstamp/>
+		<mkdir dir="${build}"/>
+        <mkdir dir="${build}/lib"/>
+        <mkdir dir="${build}/de/cmlab/ubicomp/AndroidTest"/>
+	</target>
+
+	<target name="compile" depends="prepare">
+		<javac srcdir="${src}" destdir="${build}" includes="${src.files}" includeantruntime="false">
+			<classpath>
+				<pathelement path="${lib}/SensorUDPReceiver.jar"/>
+                <pathelement path="${src}/de/cmlab/ubicomp/AndroidTest/AndroidTest.java"/>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="run" depends="compile">
+		<java classname="de.cmlab.ubicomp.AndroidTest.AndroidTest.class">
+			<classpath>
+				<pathelement path="${build}"/>
+			</classpath>
+		</java>
+	</target>
+
+	<target name="dist" depends="compile">
+		<jar destfile="${dist}/de.cmlab.ubicomp.AndroidTest.ant.test.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Built-By" value="${group6}" />
+				<attribute name="Main-Class" value="AndroidTest.AndroidTest" />
+			</manifest>
+		</jar>
+	</target>
+	
+	
+	<target name="clean" description="clean up">
+		<delete dir="${build}"/>
+		<delete dir="${dist}"/>
+	</target>
+
+	<target name="javadoc">
+		<javadoc
+			destdir="${doc}"
+			access="public"
+			source="1.8"
+			use="true"
+			notree="false"
+			nonavbar="false"
+			noindex="false"
+			splitindex="true"
+			author="true"
+			version="true"
+			packagenames="de.cmlab.ubicomp"
+			sourcepath="src">
+			<link href="http://docs.oracle.com/javase/8/docs/api/"/>
+		</javadoc>
+	</target>
+
+	<target name="all" depends="clean,prepare,compile,run"/>
+
+</project>
