@@ -11,10 +11,10 @@ import de.cmlab.ubicomp.lib.model.AndroidSensor;
  *
  *@author Hesham Omran
  */
-public class AndroidTest {
+public class 	AndroidTest {
 
 	public static void main(String[] args){
-		/*initiate a receiver by defining a port 
+		/*initiate a receiver by defining a port
 		number that will be sent to the receiver from the app*/
 		SensorUDPReceiver receiver = new SensorUDPReceiver(5000);
 		/*create a listener as shown below and let it implement Observer to
@@ -27,32 +27,47 @@ public class AndroidTest {
 
 		public SensorUDPListener() {
 			// TODO Auto-generated constructor stub
-
 		}
 
 		@Override
 		public void update(Observable o, Object arg) {
 			/*check SensorUDPReceiver Java Docs for the AndroidSensor API*/
-			AndroidSensor sensorValues = (AndroidSensor)arg;
-			System.out.println(sensorValues.toString());
-			//access to ambient light and orientation sensor
-			System.out.println("============================");
-			System.out.println("Current Lux: " + sensorValues.getAmbientlight());
-			if(sensorValues.getAmbientlight() <= 10.0){
+			AndroidSensor sensorValues = (AndroidSensor) arg;
+			//System.out.println(sensorValues.toString());
 
-				System.out.println("Should I switch the light on for you?");
-				System.out.println("If YES, then please change the orientation of your smartphone to the right.");
-				//weird sensor data
-				if(sensorValues.getOrientation()[2] >= 0.40){
-					System.out.println("Your request is processed ... smart home office to be continued :D");
-				}
-			}
-			else{
-				System.out.println(" \n");
-			}
-			System.out.println("============================");
-
+			// print the values of the AmbientLight Sensor with different comments according to intensity of current lux value
+			printValues(sensorValues);
 		}
-
 	}
+
+	/**
+	 * This method prints the current value the ambient light sensor of a smortphone sents in lux
+	 * According to the value it informs the user between which values the current one lies
+	 *
+	 **/
+	public static boolean printValues(AndroidSensor sensorValues) {
+		if (sensorValues.getAmbientlight() >= 1 && sensorValues.getAmbientlight() < 20) {
+			System.out.println("At least there is some light");
+			System.out.println("the actual value is: " + sensorValues.getAmbientlight());
+			return true;
+		}
+		if (sensorValues.getAmbientlight() >= 20 && sensorValues.getAmbientlight() < 200) {
+			System.out.println("Now light value is over 20 lux");
+			System.out.println("exact value is: " + sensorValues.getAmbientlight());
+			return true;
+		}
+		if (sensorValues.getAmbientlight() >= 200 && sensorValues.getAmbientlight() < 300) {
+			System.out.println("Now light value is over 200 lux");
+			System.out.println("exact value is: " + sensorValues.getAmbientlight());
+			return true;
+		}
+		if (sensorValues.getAmbientlight() >= 300) {
+			System.out.println("Now light value is over 300 lux");
+			System.out.println("the exact value is: " + sensorValues.getAmbientlight());
+			return true;
+		}
+		System.out.println("============================");
+		return false;
+	}
+
 }

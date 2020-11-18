@@ -35,7 +35,7 @@
     
     <target name="jar" depends="clean, compile">
         <mkdir dir="${jar.dir}"/>
-        <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${build}">
+        <jar destfile="${jar.dir}/SensorUDPreciever.jar" basedir="${build}">
             <manifest>
                 <attribute name="Main-Class" value="${main-class}"/>
             </manifest>
@@ -46,7 +46,7 @@
 		<java classname="${main-class}" fork="true">
 			<classpath>
                 <path refid="classpath"/>
-                <path location="${jar.dir}/${ant.project.name}.jar"/>
+                <path location="${jar.dir}/SensorUDPreciever.jar"/>
 			</classpath>
 		</java>
 	</target>
