@@ -12,6 +12,10 @@ public class JavaServer {
         return new Integer(x+y);
     }
 
+    public Integer multiply(int x, int y){
+        return new Integer(x*y);
+    }
+
     public static void main (String [] args){
 
         try {
