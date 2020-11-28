@@ -37,7 +37,9 @@ public class JavaClient {
     }
 
 
-
+    /**
+     * Asks user for input to decide if server should get message to sum or multiply the given argument params
+     */
     private static void chooseSumOrMultiply() {
         Scanner scanner = new Scanner(System.in);
 
@@ -66,7 +68,7 @@ public class JavaClient {
     }
 
     /**
-     * Gets the calculation of the input from server and prints is as result.
+     * Gets the calculation of the sum of Argument params through use of handler and prints its result to the console.
      *
      * @param server
      * @param params
@@ -81,6 +83,15 @@ public class JavaClient {
         System.out.println("The sum is: "+ sum);
     }
 
+
+    /**
+     * Gets the calculation of the multiplication of Argument params through use of handler and prints its result to the console.
+     *
+     * @param server
+     * @param params
+     * @throws XmlRpcException
+     * @throws IOException
+     */
     private static void getMultiplicationAndPrint(XmlRpcClient server, Vector params) throws XmlRpcException, IOException {
 
         Object result  = server.execute("sample.multiply", params);
