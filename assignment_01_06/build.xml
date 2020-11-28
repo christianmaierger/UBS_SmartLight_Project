@@ -1,0 +1,89 @@
+<!-- HCI Group: Ubiquitous Computing Assignments -->
+<!-- University of Bamberg, Prof. Dr. Tom Gross, Anna-Lena Müller -->
+<!-- Group 6, Christian Maier, Paul MÜller, Jessie Dos Santos, Corina Lehmann -->
+<!-- Build file for the UbiComp assignment: 1. Smartphone Sensors and Actuators -->
+<!-- ************************************************************ -->
+
+<project name="AndroidTest>" default="compile" basedir=".">
+	<description>
+		Get to know android smartphone sensors and actuators
+    </description>
+
+	<property name="src" value="./src"/>
+	<property name="build" value="./build"/>
+	<property name="dist" location="./dist"/>
+	<property name="lib" location="./lib"/>
+    <property name="jar.dir" value="${build}/lib/jar"/>
+	<property name="doc" location="./doc"/>
+    <property name="main-class" value="de.cmlab.ubicomp.AndroidTest"/>
+
+    <path id="classpath">
+        <fileset dir="${lib}" includes="**/*.jar"/>
+    </path>
+
+	<target name="prepare">
+		<tstamp/>
+		<mkdir dir="${build}"/>
+        <mkdir dir="${jar.dir}/"/>
+        <mkdir dir="${build}/de/cmlab/ubicomp"/>
+	</target>
+    
+	<target name="compile" depends="prepare">
+		<javac srcdir="${src}" destdir="${build}" classpathref="classpath">
+		</javac>
+	</target>
+    
+    <target name="jar" depends="clean, compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/SensorUDPreciever.jar" basedir="${build}">
+            <manifest>
+                <attribute name="Main-Class" value="${main-class}"/>
+            </manifest>
+        </jar>
+    </target>
+
+	<target name="run" depends="jar, compile">
+		<java classname="${main-class}" fork="true">
+			<classpath>
+                <path refid="classpath"/>
+                <path location="${jar.dir}/SensorUDPreciever.jar"/>
+			</classpath>
+		</java>
+	</target>
+
+	<target name="dist" depends="compile">
+		<jar destfile="${dist}/de.cmlab.ubicomp.ant.test.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Built-By" value="${group6}" />
+				<attribute name="Main-Class" value="de.cmlab.ubicomp.AndroidTest" />
+			</manifest>
+		</jar>
+	</target>
+	
+	
+	<target name="clean" description="clean up">
+		<delete dir="${build}"/>
+		<delete dir="${dist}"/>
+	</target>
+
+	<target name="javadoc">
+		<javadoc
+			destdir="${doc}"
+			access="public"
+			source="1.8"
+			use="true"
+			notree="false"
+			nonavbar="false"
+			noindex="false"
+			splitindex="true"
+			author="true"
+			version="true"
+			packagenames="de.cmlab.ubicomp"
+			sourcepath="src">
+			<link href="http://docs.oracle.com/javase/8/docs/api/"/>
+		</javadoc>
+	</target>
+
+	<target name="all" depends="clean,prepare,compile,jar,run"/>
+
+</project>
