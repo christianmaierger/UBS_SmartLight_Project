@@ -15,7 +15,8 @@ public class JavaClient {
     public static void main (String [] args) {
 
         try {
-            XmlRpcClient server = new XmlRpcClient("http://localhost/sample");
+        //TODO: server url with port and your ip: „http://{my IP-Address}:{Port}/sample/“
+            XmlRpcClient server = new XmlRpcClient("http://111.111.111.11:80/sample/");
             Vector params = new Vector();
 
             chooseSumOrMultiply();
@@ -62,7 +63,7 @@ public class JavaClient {
                         break;
                     }
             } catch (Exception e) {
-                System.out.println("Sry only integer allowed as input, you typed in: " + input);
+                System.out.println("Sorry only integer allowed as input, you typed in: " + input);
             }
         }
         return;
@@ -98,7 +99,7 @@ public class JavaClient {
         Object result  = server.execute("sample.multiply", params);
 
         int mult = ((Integer) result).intValue();
-        System.out.println("The multiplication rsult is: "+ mult);
+        System.out.println("The multiplication result is: "+ mult);
 
     }
 
@@ -112,7 +113,7 @@ public class JavaClient {
      */
     private static void getUserInputToParams(Vector params) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Please type in to integers to get there sum: ");
+        System.out.println("Please type in two integers as parameters: ");
 
         while (params.size()<=1) {
             String input = scanner.nextLine();
@@ -121,7 +122,7 @@ public class JavaClient {
                 params.addElement(in);
                 continue;
             } catch (Exception e) {
-                System.out.println("Sry only integer allowed as input, you typed in: " + input);
+                System.out.println("Sorry only integer allowed as input, you typed in: " + input);
             }
         }
         scanner.close();

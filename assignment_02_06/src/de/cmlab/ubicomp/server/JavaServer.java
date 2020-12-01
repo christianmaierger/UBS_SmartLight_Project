@@ -21,7 +21,7 @@ public class JavaServer {
         try {
 
             System.out.println("Attempting to start XML-RPC Server...");
-            WebServer server = new WebServer(8080);
+            WebServer server = new WebServer(8888);
             server.addHandler("sample", new JavaServer());
 
 

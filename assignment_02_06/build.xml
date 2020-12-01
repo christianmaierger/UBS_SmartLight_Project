@@ -14,37 +14,45 @@
 	<property name="build" value="./build"/>
 	<property name="lib" location="./lib"/>
     <property name="doc" value="./doc"/>
-    <property name="jar" value="${build}/jar"/>
-    
+    <property name="dist" value="./dist"/>
     <property name="src.files" value="./lib/xmlrpc-1.2-b1.jar"/>
-   
+    <!--main classes-->
     <property name="main-server" value="de.cmlab.ubicomp.server.JavaServer"/>
     <property name="main-client" value="de.cmlab.ubicomp.client.JavaClient"/>
    
-   
-    <path id="classpath">
+    <!--classpaths per target-->
+    <path id="compile.classpath">
          <!--get jar archives-->
         <fileset dir="${lib}" includes="**/*.jar"/>
     </path>
     
+    <path id="run.classpath">
+        <!--get jar archives-->
+         <fileset dir="${lib}" includes="**/*.jar"/>
+    </path>
      
-    <!-- create directories -->
+    
 	<target name="prepare">
-		<tstamp/>
+		<!-- create directories -->
+        <tstamp/>
 		<mkdir dir="${build}"/>
         <mkdir dir="${doc}"/>
-        <mkdir dir="${jar}"/>
+        <mkdir dir="${dist}"/>
         <mkdir dir="${build}/de/cmlab/ubicomp"/>
 	</target>
     
-    <target name="compile" depends="prepare" >
+    
+    <target name="compile" depends="prepare">
+        <!--depends on prepare target and compiles files from src directory to generate binary .class files in destination directory build -->
         <javac srcdir="${src}" destdir="${build}" includeantruntime="${src.files}"> 
-            <classpath refid="classpath"/>
+            <classpath refid="compile.classpath"/>
         </javac>
     </target>
     
-    <target name="jar-server" depends="compile">
-		<jar destfile="${jar}/de.cmlab.ubicomp.ant.xmlrpc.server.jar" basedir="${build}">
+    
+    <target name="jar.server" depends="compile">
+		<!--depends on compile target, generates .jar-archive of JavaServer and saves it at destination directory dist -->
+        <jar destfile="${dist}/de.cmlab.ubicomp.ant.server.JavaServer.jar" basedir="${build}">
 			<manifest>
 				<attribute name="Built-By" value="${group6}"/>
 				<attribute name="Main-Class" value="${main-server}"/>
@@ -52,44 +60,73 @@
 		</jar>
 	</target>
     
-    <target name="jar-client" depends="compile">
-		<jar destfile="${jar}/de.cmlab.ubicomp.ant.xmlrpc.client.jar" basedir="${build}">
+    <target name="jar.client" depends="compile">
+		<!--depends on compile target, generates .jar-archive of JavaClient and saves it at destination directory dist -->
+        <jar destfile="${dist}/de.cmlab.ubicomp.ant.client.JavaClient.jar" basedir="${build}">
 			<manifest>
 				<attribute name="Built-By" value="${group6}"/>
-				<attribute name="Main-Class" value="de.cmlab.ubicomp.client.JavaClient"/>
+				<attribute name="Main-Class" value="${main-client}"/>
 			</manifest>
 		</jar>
 	</target>
     
-    <target name="run" depends="compile, jar-server, jar-client"  description="Start Server und Client">
-        <!--Server und Client parallel starten. 
-        fork generiert eine eigene JVM (mehrere Prozesse parallel)-->
+    <!--Starts server and client parallel. fork generates JVM for each-->
+    <!--
+    <target name="run" depends="compile,jar.server, jar.client"  
+            description="Start Server and Client">
         <parallel>
-            <java classname="${main-server}" fork="true">
+            <java classname="de.cmlab.ubicomp.server.JavaServer" fork="true">
                 <classpath>
-                    <path refid="classpath"/>
-                    <path location="${jar}/de.cmlab.ubicomp.ant.xmlrpc.server.jar"/>
+                    <path refid="run.classpath"/>
+                    <path location="${build}"/>
                 </classpath>
             </java>
             <java classname="de.cmlab.ubicomp.client.JavaClient" fork="true">
+                 <classpath>
+                    <path refid="run.classpath"/>
+                    <path location="${build}"/>
+                </classpath>
+            </java>
+        </parallel>
+    </target>
+    -->
+    
+    <target name="run.server" depends="compile"  description="Start Server">
+         <!--depends on compile and runs server class-->
+        <parallel>
+            <java classname="de.cmlab.ubicomp.server.JavaServer" fork="true">
                 <classpath>
-                    <path refid="classpath"/>
-                    <path location="${jar}/de.cmlab.ubicomp.ant.xmlrpc.client.jar"/>
+                    <path refid="run.classpath"/>
+                    <path location="${build}"/>
                 </classpath>
             </java>
         </parallel>
     </target>
     
-    <!-- delete old directories, before starting -->
+    <target name="run.client" depends="compile"  description="Start Client">        
+        <!--depends on compile and runs client class-->
+        <parallel>
+            <java classname="de.cmlab.ubicomp.client.JavaClient" fork="true">
+                 <classpath>
+                    <path refid="run.classpath"/>
+                    <path location="${build}"/>
+                </classpath>
+            </java>
+        </parallel>
+    </target>
+
+    
 	<target name="clean" description="clean up">
-		<delete dir="${build}"/>
+		<!-- delete old directories, before starting -->
+        <delete dir="${build}"/>
         <delete dir="${doc}"/>
         <delete dir="${dist}"/>
 	</target>
 
-     <!-- create javadoc -->
+    
 	<target name="javadoc">
-		<javadoc
+		 <!-- create javadoc -->
+        <javadoc
 			destdir="${doc}"
 			access="public"
 			source="1.8"
@@ -105,7 +142,8 @@
 			<link href="http://docs.oracle.com/javase/8/docs/api/"/>
 		</javadoc>
 	</target>
-
-	<target name="all" depends="clean,prepare,compile,jar-server,jar-client,run,javadoc"/>
+    
+    <!--target "all" normally makes all our wishes come true, but for this assignment need to run run-targets separatly without all target -->
+	<target name="all" depends="clean,prepare,compile,jar.server,jar.client,run.server, run.client,javadoc"/>
 
 </project>
