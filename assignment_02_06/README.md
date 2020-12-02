@@ -9,7 +9,7 @@ Before you build with ant, go to directory /src/de/cmlab/ubicomp/client/ and ope
 There you need to enter the IP-Address of the server at line 19:
 
     //TODO: server url with port and your ip: „http://{my IP-Address}:{Port}/sample/“
-    XmlRpcClient server = new XmlRpcClient("http://111.111.111.11:80/sample/");
+    XmlRpcClient server = new XmlRpcClient("http://111.111.111.11:8080/sample/");
 
 Build project with ant:
 

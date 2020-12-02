@@ -16,7 +16,7 @@ public class JavaClient {
 
         try {
         //TODO:Complete server-url with port and your ip address:„http://{my IP-Address}:{Port}/sample/“
-            XmlRpcClient server = new XmlRpcClient("http://111.111.111.11:80/sample/");
+            XmlRpcClient server = new XmlRpcClient("http://111.111.111.11:8080/sample/");
             Vector params = new Vector();
 
             chooseSumOrMultiply();
