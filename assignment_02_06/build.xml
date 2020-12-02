@@ -70,27 +70,6 @@
 		</jar>
 	</target>
     
-    <!--Starts server and client parallel. fork generates JVM for each-->
-    <!--
-    <target name="run" depends="compile,jar.server, jar.client"  
-            description="Start Server and Client">
-        <parallel>
-            <java classname="de.cmlab.ubicomp.server.JavaServer" fork="true">
-                <classpath>
-                    <path refid="run.classpath"/>
-                    <path location="${build}"/>
-                </classpath>
-            </java>
-            <java classname="de.cmlab.ubicomp.client.JavaClient" fork="true">
-                 <classpath>
-                    <path refid="run.classpath"/>
-                    <path location="${build}"/>
-                </classpath>
-            </java>
-        </parallel>
-    </target>
-    -->
-    
     <target name="run.server" depends="compile"  description="Start Server">
          <!--depends on compile and runs server class-->
         <parallel>
@@ -143,7 +122,7 @@
 		</javadoc>
 	</target>
     
-    <!--target "all" normally makes all our wishes come true, but for this assignment need to run run-targets separatly without all target -->
+    <!-- target "all" normally makes all our wishes come true, but for this assignment you need to run targets separatly (run.client and run.server start in separate terminals) -->
 	<target name="all" depends="clean,prepare,compile,jar.server,jar.client,run.server, run.client,javadoc"/>
 
 </project>

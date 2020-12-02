@@ -15,7 +15,7 @@ public class JavaClient {
     public static void main (String [] args) {
 
         try {
-        //TODO: server url with port and your ip: „http://{my IP-Address}:{Port}/sample/“
+        //TODO:Complete server-url with port and your ip address:„http://{my IP-Address}:{Port}/sample/“
             XmlRpcClient server = new XmlRpcClient("http://111.111.111.11:80/sample/");
             Vector params = new Vector();
 
