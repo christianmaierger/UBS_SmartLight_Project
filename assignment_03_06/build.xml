@@ -1,0 +1,125 @@
+<!-- HCI Group: Ubiquitous Computing Assignments -->
+<!-- University of Bamberg, Prof. Dr. Tom Gross, Christoph Beckmann -->
+<!-- Group 6, Christian Maier, Paul MÜller, Jessie Dos Santos, Corina Lehmann -->
+<!-- Build file for the ubicomp assignment: Sens-ation_1.73 platform (assignment3) -->
+<!-- ************************************************************ -->
+
+<project name="assignment_03" default="compile" basedir=".">
+	<description>
+		Project using the Sens-ation_1.73 platform with a AmbientLightSensor and a AmbientLightActuator
+	</description>
+
+	<property name="src.dir" value="./src"/>
+	<property name="build.dir" value="./build"/>
+	<property name="dist.dir" location="./dist"/>
+	<property name="lib.dir" location="./lib"/>
+	<property name="doc.dir" location="./doc"/>
+	<property name="sensation.dir" location="./Sens-ation_1.73"/>
+	
+	
+	<property name="src.incl.actuator" value="de/cmlab/ubicomp/actuator/**" />
+	<property name="src.incl.common" value="de/cmlab/ubicomp/common/**" />
+	<property name="src.incl.sensor" value="de/cmlab/ubicomp/sensor/**" />
+	<property name="src.files" value="${src.incl.common}, ${src.incl.actuator}, ${src.incl.sensor}"/>
+	
+	<property name="build.incl.actuator" value="${src.incl.common}, ${src.incl.actuator}"/>
+	<property name="build.incl.sensor" value="${src.incl.common}, ${src.incl.sensor}"/>
+
+	<path id="java.classpath">
+		<pathelement path="${build.dir}" />
+		<pathelement location="${lib.dir}/xmlrpc-1.2-b1.jar" />
+	</path>
+
+	<target name="prepare">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${doc.dir}"/>
+		<mkdir dir="${dist.dir}"/>
+	</target>
+
+	<target name="compile" depends="prepare">
+		<echo>Compiling from ${src}/: ${src.files}</echo>
+		<javac srcdir="${src.dir}" destdir="${build.dir}" includes="${src.files}" includeantruntime="false">
+			<classpath refid="java.classpath"/>
+		</javac>
+	</target>
+	
+	<target name="run">
+		<echo>+++ Instructions</echo>
+		<echo>1st terminal: ant sensation.run</echo>
+		<echo>2nd terminal: ant sensor.run</echo>
+		<echo>3rd terminal: ant actuator.run</echo>
+		<echo>Exit each with {CRTL} + C</echo>
+	</target>
+
+	<target name="sensation.run">
+		<java dir="${sensation.dir}" jar="${sensation.dir}/sens-ation_1.73.jar" fork="true" failonerror="true">
+				<classpath>
+					<pathelement path="${java.class.path}" />
+				</classpath>
+			</java>
+	</target>
+	
+	<target name="sensor.run" depends="compile">
+		<java classname="de.cmlab.ubicomp.sensor.StartSensor" failonerror="true" fork="yes">
+			<classpath refid="java.classpath"/>
+		</java>
+	</target>
+	
+	<target name="actuator.run" depends="compile">
+		<java classname="de.cmlab.ubicomp.actuator.StartActuator" failonerror="true" fork="yes">
+			<classpath refid="java.classpath"/>
+		</java>
+	</target>
+
+	<target name="dist" depends="sensor.dist, actuator.dist" />
+	
+	<target name="sensor.dist" depends="compile">
+		<jar destfile="${dist.dir}/AmbientLightSensor.jar" basedir="${build.dir}" includes="${build.incl.sensor}">
+		      <manifest>
+		        <attribute name="Built-By" value="${user.name}" />
+		        <attribute name="Main-Class" value="de.cmlab.ubicomp.sensor.StartSensor" />
+		      </manifest>
+		      <!-- include lib -->
+		      <zipgroupfileset dir="${lib.dir}" includes="xmlrpc-1.2-b1.jar"/>
+		    </jar>
+	</target>
+	
+	<target name="actuator.dist" depends="compile">
+			<jar destfile="${dist.dir}/AmbientLightActuator.jar" basedir="${build.dir}" includes="${build.incl.actuator}">
+			      <manifest>
+			        <attribute name="Built-By" value="${user.name}" />
+			        <attribute name="Main-Class" value="de.cmlab.ubicomp.actuator.StartActuator" />
+			      </manifest>
+			      <!-- include lib -->
+			      <zipgroupfileset dir="${lib.dir}" includes="xmlrpc-1.2-b1.jar"/>
+			    </jar>
+		</target>
+
+	<target name="clean" description="clean up">
+		<delete dir="${build.dir}"/>
+		<delete dir="${doc.dir}"/>
+		<delete dir="${dist.dir}"/>
+	</target>
+
+	<target name="doc">
+		<javadoc
+			encoding="UTF-8"
+			charset="UTF-8"
+			destdir="${doc.dir}"
+			access="public"
+			source="1.7"
+			use="true"
+			notree="false"
+			nonavbar="false"
+			noindex="false"
+			splitindex="true"
+			author="true"
+			version="true"
+			sourcepath="${src.dir}">
+			<classpath refid="java.classpath"/>
+			<link href="http://download.oracle.com/javase/7/docs/api/"/>
+		</javadoc>
+	</target>
+	
+	<target name="all" depends="compile, run" />
+</project>

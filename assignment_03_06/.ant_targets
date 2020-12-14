@@ -1,0 +1,12 @@
+	prepare
+	compile
+	run
+	sensation.run
+	sensor.run
+	actuator.run
+	dist
+	sensor.dist
+	actuator.dist
+	clean
+	javadoc
+	all
