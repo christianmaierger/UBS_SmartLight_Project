@@ -25,6 +25,7 @@
     <NativeDataType>String</NativeDataType>
     <MaximumValue>0.0</MaximumValue>
     <MinimumValue>0.0</MinimumValue>
+  </Sensor>
   <Sensor id="G6AmbientLight" class="Light">
     <Description>TestSensor.</Description>
     <HardwareID />
