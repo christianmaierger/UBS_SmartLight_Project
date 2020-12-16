@@ -129,31 +129,34 @@ public class AmbientLightSensor implements Runnable {
 	public void run() {
 		
 		try{
+            //get sensor data from SensorUdp app via udp packages
             serverSocket = new DatagramSocket(8888);
 			receivedData = new byte[1024];
-            
+            float preValue = -1;
             while (active) {
                 receivePacket = new DatagramPacket(receivedData, receivedData.length);
                 try{
                     serverSocket.receive(receivePacket);
                     this.setAmbientlight(extractAmbientLightData(receivedData));
-                
                     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
                     String dateStamp = df.format(new Date());
-                    // dice a lux value
-                    //String light = this.randInt(1, 5000) + "." + this.randInt(1, 10);
-                    String light = String.format("%f", this.getAmbientlight());
-                    // create sensor event
-                    SensorEvent event = new SensorEvent(this.sensorID, dateStamp, light);
-                    try {
-                        // send to Sens-ation
-                        sensation.notify(event);
-                        // Sensor has a sampling interval of about 500ms
-                        Thread.sleep(500);
-                    } catch (Throwable e) {
-                        active = false;
-                        e.printStackTrace();
+                    //create new event, if sensor value changed
+                    if(preValue != getAmbientlight()){
+                        String light = String.format("%f", this.getAmbientlight());
+                        preValue = getAmbientlight();
+                        // create sensor event
+                        SensorEvent event = new SensorEvent(this.sensorID, dateStamp, light);
+                        try {
+                            // send to Sens-ation
+                            sensation.notify(event);
+                            // Sensor has a sampling interval of about 500ms
+                            Thread.sleep(500);
+                        } catch (Throwable e) {
+                            active = false;
+                            e.printStackTrace();
+                        }
                     }
+                    
                 } catch (IOException e) {
 							
                 }    
@@ -163,14 +166,16 @@ public class AmbientLightSensor implements Runnable {
 			e.printStackTrace();
 		}
     }
-    /** copied from BytesToSensorValueConverter.java, assignment 1
+    
+    /** copied from BytesToSensorValueConverter.java, assignment 1 --> look there for detailed infos
      *
      */
 	public static float extractAmbientLightData(byte[] receivedData){
 		float[] light = extractingData(56, 59, receivedData,4);
         return light[0];
 	}
-	/** copied from BytesToSensorValueConverter.java, assignment 1
+	
+	/** copied from BytesToSensorValueConverter.java, assignment 1 --> look there for detailed infos
      *
      */
 	private static float[] extractingData(int startindex, int endindex, byte[] receivedData, int step )
@@ -209,17 +214,5 @@ public class AmbientLightSensor implements Runnable {
 	 */
 	public void setAmbientlight(float ambientlight) {
 		this.ambientlight = ambientlight;
-	}
-	
-	/**
-	 * Random integer generator
-	 * @param min lower bound
-	 * @param max upper bound
-	 * @return Random integer between lower and upper bound
-	 */
-	public int randInt(int min, int max) {
-		Random rand = new Random();
-		int randomNum = rand.nextInt((max - min) + 1) + min;
-		return randomNum;
 	}
 }
