@@ -85,7 +85,7 @@ public class AmbientLightActuator implements Observer {
 	public void printValues(SensorEvent event){
 		float currentValue = Float.parseFloat(event.getValue());
 		
-		if(currentValue >= 1 && currentValue < 20){
+		if(currentValue >= 0 && currentValue < 20){
 			System.out.println("At least there is some light");
 			System.out.println("the current value is: " + event.getValue());
 		}
