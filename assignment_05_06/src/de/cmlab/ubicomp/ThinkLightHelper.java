@@ -20,11 +20,11 @@ public class ThinkLightHelper {
     }
 
     public void checkForDLL() {
-        File f = new File(dll1);
-        File f2 = new File(dll2);
-        if (f.exists() && !f.isFile()) {
+        File f = new File(dll1.replace(",ThinkLight",""));
+        File f2 = new File(dll2.replace(",ThinkLight",""));
+        if (f.exists() && f.isFile()) {
             dllFileUsed = dll1;
-        } else if (f2.exists() && !f2.isFile()) {
+        } else if (f2.exists() && f2.isFile()) {
             dllFileUsed = dll2;
         } else {
             noThinkLight=true;
@@ -42,6 +42,15 @@ public class ThinkLightHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        ThinkLightHelper test= new ThinkLightHelper();
+        test.checkForDLL();
+        test.switchThinkLight();
+        Thread.currentThread().sleep(5000);
+        test.switchThinkLight();                  
+
     }
 
 

@@ -57,7 +57,7 @@ public class AndroidTest {
 	 * According to the value it informs the user between which values the current one lies
 	 *
 	 **/
-	public boolean adjustLightVolume(AndroidSensor sensorValues) {
+	public void adjustLightVolume(AndroidSensor sensorValues) {
 
 		// way to get results just every x milis, put the amount in the if clause
 		long finish = System.currentTimeMillis();
@@ -65,10 +65,8 @@ public class AndroidTest {
 
 		if (timeElapsed>=1000) {
 			start=System.currentTimeMillis();
-			System.out.println("Schon Zeit und start ist jetzt" + start);
 		} else {
-			System.out.println(finish-start);
-			return true;
+			return;
 		}
 
 		if (sensorValues.getAmbientlight() >= 0 && sensorValues.getAmbientlight() < 50) {
@@ -79,13 +77,14 @@ public class AndroidTest {
 				brightnessHelper.setBrightness(100);
 				System.out.println("Now light value is over 0 lux, Switch ON");
 				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
-
+				return;
 			}
 			if (lightSwitched==true) {
 				System.out.println(lightSwitched +"Licht ist an und unter 50");
+				return;
 			}
 
-			return true;
+
 		}
 
 		if (sensorValues.getAmbientlight() >= 50 && sensorValues.getAmbientlight() < 200) {
@@ -94,7 +93,7 @@ public class AndroidTest {
 				thinkLightHelper.switchThinkLight();
 				System.out.println("Now light value is over 50 lux, Switch ON");
 				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
-				return true;
+				return;
 				// wenn licht an ist und über 260 ca. kann mans ausmachen, hellgenug finde ich
 			}
 			if (lightSwitched==true) {
@@ -109,13 +108,13 @@ public class AndroidTest {
 				thinkLightHelper.switchThinkLight();
 				brightnessHelper.setBrightness(75);
 				System.out.println(lightSwitched +"Licht ist aus");
-				return true;
+				return;
 			}
 		}
 
 		System.out.println("============================");
 		System.out.println("Licht ist  : " + lightSwitched);
-		return false;
+		return;
 	}
 
 	public void getLightVolume(AndroidSensor sensorValues) {
