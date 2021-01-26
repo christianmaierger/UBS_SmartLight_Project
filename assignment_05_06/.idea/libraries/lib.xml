@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/de/cmlab/ubicomp/lib/usb-api-1.0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/de/cmlab/ubicomp/lib/SensorUDPReceiver.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/de/cmlab/ubicomp/lib/usb4java-javax-1.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/de/cmlab/ubicomp/lib/jintellitype-1.3.9.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <NATIVE>
+      <root url="file://$PROJECT_DIR$/lib/de/cmlab/ubicomp/lib" />
+    </NATIVE>
+    <SOURCES />
+  </library>
+</component>
