@@ -9,8 +9,15 @@ public class ThinkLightHelper {
     private String dllFileUsed;
     private String runDll32 = "C:\\Windows\\System32\\Rundll32.exe";
     private Process process;
+    private boolean noThinkLight=false;
 
+    public boolean isNoThinkLight() {
+        return noThinkLight;
+    }
 
+    public void setNoThinkLight(boolean noThinkLight) {
+        this.noThinkLight = noThinkLight;
+    }
 
     public void checkForDLL() {
         File f = new File(dll1);
@@ -19,11 +26,16 @@ public class ThinkLightHelper {
             dllFileUsed = dll1;
         } else if (f2.exists() && !f2.isFile()) {
             dllFileUsed = dll2;
+        } else {
+            noThinkLight=true;
         }
 
     }
 
     public void switchThinkLight() {
+        if (noThinkLight == true) {
+            return;
+        }
 
         try {
             process = new ProcessBuilder(runDll32, dllFileUsed).start();

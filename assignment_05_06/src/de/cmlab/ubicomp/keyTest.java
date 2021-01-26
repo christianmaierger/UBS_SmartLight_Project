@@ -9,12 +9,12 @@ public class keyTest {
 
     public static void main(String[] args) {
 
-        try {
-            BrightnessHelper.setBrightness(50);
+       /* try {
+           BrightnessHelper.setBrightness(50);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+*/
         JIntellitype.getInstance().registerHotKey(1, JIntellitype.MOD_ALT, (int)'A');
 
        /* System.out.println("Start");
