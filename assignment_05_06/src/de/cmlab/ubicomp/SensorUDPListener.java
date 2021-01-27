@@ -20,7 +20,6 @@ public class SensorUDPListener implements Observer {
         AndroidSensor sensorValues = (AndroidSensor) arg;
 
 
-        // print the values of the AmbientLight Sensor with different comments according to intensity of current lux value
-        test.adjustLightVolume(sensorValues);
+        test.lightActuator(sensorValues);
     }
 }

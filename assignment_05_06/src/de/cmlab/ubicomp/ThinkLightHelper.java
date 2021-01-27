@@ -43,15 +43,4 @@ public class ThinkLightHelper {
             e.printStackTrace();
         }
     }
-
-    public static void main(String[] args) throws InterruptedException {
-        ThinkLightHelper test= new ThinkLightHelper();
-        test.checkForDLL();
-        test.switchThinkLight();
-        Thread.currentThread().sleep(5000);
-        test.switchThinkLight();                  
-
-    }
-
-
 }

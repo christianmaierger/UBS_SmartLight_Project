@@ -16,10 +16,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class AndroidTest {
 	private float lightValue;
 	private boolean lightSwitched;
-	BrightnessHelper brightnessHelper;
-	ThinkLightHelper thinkLightHelper;
-	BlockingQueue<InfoMessage> queue;
-	long start;
+	private BrightnessHelper brightnessHelper;
+	private ThinkLightHelper thinkLightHelper;
+	private BlockingQueue<InfoMessage> queue;
+	private long start;
+	private boolean skipThinkLight=false;
 
 
 	public AndroidTest() {
@@ -30,7 +31,7 @@ public class AndroidTest {
 		thinkLightHelper.checkForDLL();
 
 		if(thinkLightHelper.isNoThinkLight()) {
-
+             skipThinkLight=true;
 		}
 
 		queue = new ArrayBlockingQueue<>(5, true);
@@ -49,7 +50,6 @@ public class AndroidTest {
 		SensorUDPListener listener = new SensorUDPListener();
 		receiver.addObserver(listener);
 
-		//irgendwann wäre ich hier durch
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class AndroidTest {
 	 * According to the value it informs the user between which values the current one lies
 	 *
 	 **/
-	public void adjustLightVolume(AndroidSensor sensorValues) {
+	public void lightActuator(AndroidSensor sensorValues) {
 
 		// way to get results just every x milis, put the amount in the if clause
 		long finish = System.currentTimeMillis();
@@ -83,14 +83,13 @@ public class AndroidTest {
 				System.out.println(lightSwitched +"Licht ist an und unter 50");
 				return;
 			}
-
-
 		}
 
 		if (sensorValues.getAmbientlight() >= 50 && sensorValues.getAmbientlight() < 200) {
 			if (lightSwitched==false) {
 				lightSwitched=true;
 				thinkLightHelper.switchThinkLight();
+				brightnessHelper.setBrightness(95);
 				System.out.println("Now light value is over 50 lux, Switch ON");
 				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
 				return;
@@ -98,6 +97,7 @@ public class AndroidTest {
 			}
 			if (lightSwitched==true) {
 				System.out.println(lightSwitched +"Licht ist an und über 50-200");
+				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
 			}
 
 
@@ -106,10 +106,18 @@ public class AndroidTest {
 				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
 				lightSwitched=false;
 				thinkLightHelper.switchThinkLight();
-				brightnessHelper.setBrightness(75);
+				brightnessHelper.setBrightness(85);
 				System.out.println(lightSwitched +"Licht ist aus");
 				return;
 			}
+			if (lightSwitched==false && sensorValues.getAmbientlight() > 200) {
+                System.out.println("last trigger light out over 200 lux");
+				brightnessHelper.setBrightness(85);
+			}
+		}
+		if(lightSwitched==true) {
+			lightSwitched=false;
+			thinkLightHelper.switchThinkLight();
 		}
 
 		System.out.println("============================");
