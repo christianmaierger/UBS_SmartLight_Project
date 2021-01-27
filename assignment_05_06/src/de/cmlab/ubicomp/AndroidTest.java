@@ -18,25 +18,38 @@ public class AndroidTest {
 	private boolean lightSwitched;
 	BrightnessHelper brightnessHelper;
 	ThinkLightHelper thinkLightHelper;
-	BlockingQueue<InfoMessage> queue;
 	long start;
 
 
+	//todo customize more for indivudal users and/or make availible for more os and/or systems in general, like lighted keyboards
+	//or other company`s laptops with builtin leds
+	/**
+	 * Class acts as Actuator to filter and interpret the sensor input ragrding the light value, it changes the state of a
+	 * ThinkLight, that is a Led built inside many ThinkPads, a highly used notebook by companies, and also adjusts the screen
+	 * brightness of ms windows systems a bit
+	 */
 	public AndroidTest() {
 		float lightValue=1;
 		lightSwitched=false;
 		brightnessHelper = new BrightnessHelper();
 		thinkLightHelper = new ThinkLightHelper();
+		//check for space of file to be executed to control ThinkLight
 		thinkLightHelper.checkForDLL();
 
+		
+			//todo move functionallity to exclude method calls from LightHelper over here
+		   //so we free up the resources if device is not a thinkpad or does not have necessry features installed
 		if(thinkLightHelper.isNoThinkLight()) {
 
 		}
 
-		queue = new ArrayBlockingQueue<>(5, true);
 		start = System.currentTimeMillis();
 	}
 
+	//todo gui is in the making
+	/**
+	 * Just main class to start whole process
+	 */
 	public static void main(String[] args){
 		/*initiate a receiver by defining a port
 		number that will be sent to the receiver from the app*/
@@ -53,9 +66,10 @@ public class AndroidTest {
 	}
 
 	/**
-	 * This method prints the current value the ambient light sensor of a smortphone sents in lux
-	 * According to the value it informs the user between which values the current one lies
+	 * This method interprets the light values sent by a smartphone via udp every second and adjusts the screen brightness
+	 * on windows systems and controls the led built into ThinkPads
 	 *
+	 * params sensorValues the values send via UDP from the sensor/smartphone
 	 **/
 	public boolean adjustLightVolume(AndroidSensor sensorValues) {
 
@@ -71,6 +85,8 @@ public class AndroidTest {
 			return true;
 		}
 
+
+		//todo clean up and remove printouts that help debugging the code
 		if (sensorValues.getAmbientlight() >= 0 && sensorValues.getAmbientlight() < 50) {
 
 			if (lightSwitched==false) {

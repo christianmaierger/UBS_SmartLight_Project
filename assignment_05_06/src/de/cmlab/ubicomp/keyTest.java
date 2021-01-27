@@ -5,6 +5,10 @@ import com.melloware.jintellitype.*;
 
 import java.io.IOException;
 
+
+/**
+ * obsolete class just to show our effort
+ */
 public class keyTest {
 
     public static void main(String[] args) {

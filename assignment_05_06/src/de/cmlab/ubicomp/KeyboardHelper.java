@@ -3,6 +3,10 @@ package de.cmlab.ubicomp;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
+
+/**
+ * obsolete class just to show our effort
+ */
 public class KeyboardHelper {
  private boolean lightOn;
  Robot robot1;
