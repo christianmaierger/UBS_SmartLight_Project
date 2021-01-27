@@ -77,51 +77,44 @@ public class AndroidTest {
 				brightnessHelper.setBrightness(100);
 				System.out.println("Now light value is over 0 lux, Switch ON");
 				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
-				return;
+				System.out.println("LIGHT is ON");
 			}
 			if (lightSwitched==true) {
 				System.out.println(lightSwitched +"Licht ist an und unter 50");
-				return;
+				System.out.println("LIGHT is ON");
 			}
 		}
 
-		if (sensorValues.getAmbientlight() >= 50 && sensorValues.getAmbientlight() < 200) {
-			if (lightSwitched==false) {
-				lightSwitched=true;
+		if (sensorValues.getAmbientlight() >= 50 && sensorValues.getAmbientlight() < 120) {
+			if (lightSwitched == false) {
+				lightSwitched = true;
 				thinkLightHelper.switchThinkLight();
 				brightnessHelper.setBrightness(95);
 				System.out.println("Now light value is over 50 lux, Switch ON");
 				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
-				return;
-				// wenn licht an ist und über 260 ca. kann mans ausmachen, hellgenug finde ich
 			}
-			if (lightSwitched==true) {
-				System.out.println(lightSwitched +"Licht ist an und über 50-200");
+			if (lightSwitched == true) {
+				System.out.println(lightSwitched + "Licht ist an und über 50-200");
 				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
 			}
+		}
 
 
-			if (lightSwitched==true && sensorValues.getAmbientlight() > 200) {
-				//to turnout light
+			if (lightSwitched==true && sensorValues.getAmbientlight() > 120) {
 				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
 				lightSwitched=false;
 				thinkLightHelper.switchThinkLight();
 				brightnessHelper.setBrightness(85);
 				System.out.println(lightSwitched +"Licht ist aus");
-				return;
 			}
 			if (lightSwitched==false && sensorValues.getAmbientlight() > 200) {
                 System.out.println("last trigger light out over 200 lux");
 				brightnessHelper.setBrightness(85);
+				return;
 			}
-		}
-		if(lightSwitched==true) {
-			lightSwitched=false;
-			thinkLightHelper.switchThinkLight();
-		}
-
 		System.out.println("============================");
 		System.out.println("Licht ist  : " + lightSwitched);
+		System.out.println("the exact value is: " + sensorValues.getAmbientlight());
 		return;
 	}
 

@@ -58,5 +58,5 @@ public class BrightnessHelper {
                     e.printStackTrace();
                 }
     }
-    
+
 }
