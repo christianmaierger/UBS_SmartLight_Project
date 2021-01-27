@@ -5,10 +5,19 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+/**
+ * Helps to adjust the brightness of the screen for windows systems
+ */
 
 public class BrightnessHelper {
     boolean graphicsDriverDoesNotSUpportPSCommand=false;
 
+
+    /**
+     * Through calling a cmd command adjuts the brightness of the screen by a put in value
+     *
+     * @param brightness value of screen brightness from 0-100
+     */
     public void setBrightness(int brightness)
             {
 

@@ -12,31 +12,44 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+//todo customize more for indivudal users and/or make availible for more os and/or systems in general, like lighted keyboards
+//or other company`s laptops with builtin leds
+/**
+ * Class acts as Actuator to filter and interpret the sensor input ragrding the light value, it changes the state of a
+ * ThinkLight, that is a Led built inside many ThinkPads, a highly used notebook by companies, and also adjusts the screen
+ * brightness of ms windows systems a bit
+ */
 
-public class AndroidTest {
-	private float lightValue;
+public class AndroidActuator {
 	private boolean lightSwitched;
 	private BrightnessHelper brightnessHelper;
 	private ThinkLightHelper thinkLightHelper;
-	private BlockingQueue<InfoMessage> queue;
 	private long start;
+	//check for space of file to be executed to control ThinkLight
 	private boolean skipThinkLight=false;
 
 
-	public AndroidTest() {
-		float lightValue=1;
+	public AndroidActuator() {
+
 		lightSwitched=false;
 		brightnessHelper = new BrightnessHelper();
 		thinkLightHelper = new ThinkLightHelper();
 		thinkLightHelper.checkForDLL();
 
+//todo move functionallity to exclude method calls from LightHelper over here
+		//so we free up the resources if device is not a thinkpad or does not have necessry features installed
+
 		if(thinkLightHelper.isNoThinkLight()) {
              skipThinkLight=true;
 		}
 
-		queue = new ArrayBlockingQueue<>(5, true);
 		start = System.currentTimeMillis();
 	}
+
+//todo gui is in the making
+	/**
+	 * Just main class to start whole process
+	 */
 
 	public static void main(String[] args){
 		/*initiate a receiver by defining a port
@@ -53,10 +66,12 @@ public class AndroidTest {
 	}
 
 	/**
-	 * This method prints the current value the ambient light sensor of a smortphone sents in lux
-	 * According to the value it informs the user between which values the current one lies
+	 * This method interprets the light values sent by a smartphone via udp every second and adjusts the screen brightness
+	 * on windows systems and controls the led built into ThinkPads
 	 *
+	 * params sensorValues the values send via UDP from the sensor/smartphone
 	 **/
+
 	public void lightActuator(AndroidSensor sensorValues) {
 
 		// way to get results just every x milis, put the amount in the if clause
@@ -118,7 +133,4 @@ public class AndroidTest {
 		return;
 	}
 
-	public void getLightVolume(AndroidSensor sensorValues) {
-		this.lightValue=sensorValues.getAmbientlight();
-	}
 }
