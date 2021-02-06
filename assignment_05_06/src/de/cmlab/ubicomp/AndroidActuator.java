@@ -75,16 +75,69 @@ public class AndroidActuator {
 	 **/
 	public void lightActuator(AndroidSensor sensorValues) {
 
-		// way to get results just every x milis, put the amount in the if clause
-		long finish = System.currentTimeMillis();
-		long timeElapsed = finish - start;
+		if (checkForTimeElapsed()) return;
 
-		if (timeElapsed>=1000) {
-			start=System.currentTimeMillis();
-		} else {
+		lowLightHandler(sensorValues);
+
+		littleLightHandler(sensorValues);
+		
+		normalLightHandler(sensorValues);
+
+		highLightHandler(sensorValues);
+	}
+
+	private void highLightHandler(AndroidSensor sensorValues) {
+		if (lightSwitched==false && sensorValues.getAmbientlight() > 200) {
+                System.out.println("last trigger light out over 200 lux");
+				if (osIsWindows) {
+					brightnessHelperWindows.setBrightness(85);
+				}
 			return;
-		}
+			}
+		System.out.println("============================");
+		System.out.println("Licht ist  : " + lightSwitched);
+		System.out.println("the exact value is: " + sensorValues.getAmbientlight());
+		return;
+	}
 
+	private void normalLightHandler(AndroidSensor sensorValues) {
+		if (lightSwitched==true && sensorValues.getAmbientlight() > 120) {
+				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
+				lightSwitched=false;
+
+				if (!skipThinkLight) {
+					thinkLightHelper.switchThinkLight();
+				}
+
+
+				if (osIsWindows) {
+					brightnessHelperWindows.setBrightness(85);
+				}
+				System.out.println(lightSwitched +"Licht ist aus");
+			}
+	}
+
+	private void littleLightHandler(AndroidSensor sensorValues) {
+		if (sensorValues.getAmbientlight() >= 50 && sensorValues.getAmbientlight() < 120) {
+			if (lightSwitched == false) {
+				lightSwitched = true;
+				if (!skipThinkLight) {
+					thinkLightHelper.switchThinkLight();
+				}
+				if (osIsWindows) {
+					brightnessHelperWindows.setBrightness(95);
+				}
+				System.out.println("Now light value is over 50 lux, Switch ON");
+				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
+			}
+			if (lightSwitched == true) {
+				System.out.println(lightSwitched + "Licht ist an und über 50-200");
+				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
+			}
+		}
+	}
+
+	private void lowLightHandler(AndroidSensor sensorValues) {
 		if (sensorValues.getAmbientlight() >= 0 && sensorValues.getAmbientlight() < 50) {
 
 			if (lightSwitched==false) {
@@ -105,51 +158,19 @@ public class AndroidActuator {
 				System.out.println("LIGHT is ON");
 			}
 		}
+	}
 
-		if (sensorValues.getAmbientlight() >= 50 && sensorValues.getAmbientlight() < 120) {
-			if (lightSwitched == false) {
-				lightSwitched = true;
-				if (!skipThinkLight) {
-					thinkLightHelper.switchThinkLight();
-				}
-				if (osIsWindows) {
-					brightnessHelperWindows.setBrightness(95);
-				}
-				System.out.println("Now light value is over 50 lux, Switch ON");
-				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
-			}
-			if (lightSwitched == true) {
-				System.out.println(lightSwitched + "Licht ist an und über 50-200");
-				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
-			}
+	private boolean checkForTimeElapsed() {
+		// way to get results just every x milis, put the amount in the if clause
+		long finish = System.currentTimeMillis();
+		long timeElapsed = finish - start;
+
+		if (timeElapsed>=1000) {
+			start=System.currentTimeMillis();
+		} else {
+			return true;
 		}
-
-
-			if (lightSwitched==true && sensorValues.getAmbientlight() > 120) {
-				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
-				lightSwitched=false;
-
-				if (!skipThinkLight) {
-					thinkLightHelper.switchThinkLight();
-				}
-
-
-				if (osIsWindows) {
-					brightnessHelperWindows.setBrightness(85);
-				}
-				System.out.println(lightSwitched +"Licht ist aus");
-			}
-			if (lightSwitched==false && sensorValues.getAmbientlight() > 200) {
-                System.out.println("last trigger light out over 200 lux");
-				if (osIsWindows) {
-					brightnessHelperWindows.setBrightness(85);
-				}
-				return;
-			}
-		System.out.println("============================");
-		System.out.println("Licht ist  : " + lightSwitched);
-		System.out.println("the exact value is: " + sensorValues.getAmbientlight());
-		return;
+		return false;
 	}
 
 }
