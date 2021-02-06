@@ -12,6 +12,9 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import static com.sun.javafx.PlatformUtil.isWindows;
+import static com.sun.javafx.util.Utils.isUnix;
+
 //todo customize more for indivudal users and/or make availible for more os and/or systems in general, like lighted keyboards
 //or other company`s laptops with builtin leds
 /**
@@ -22,9 +25,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class AndroidActuator {
 	private boolean lightSwitched;
-	private BrightnessHelper brightnessHelper;
+	private BrightnessHelper brightnessHelperWindows;
 	private ThinkLightHelper thinkLightHelper;
+	// checks for starting time of programm
 	private long start;
+	//check if linux or windows distribution is used, later versions will include other os
+	private boolean osIsWindows;
+	private boolean osIsUnix;
 	//check for space of file to be executed to control ThinkLight
 	private boolean skipThinkLight=false;
 
@@ -32,9 +39,17 @@ public class AndroidActuator {
 	public AndroidActuator() {
 
 		lightSwitched=false;
-		brightnessHelper = new BrightnessHelper();
+
+		if(isWindows()) {
+			System.out.println("System is Windows");
+		} else if(isUnix()) {
+			System.out.println("System is Windows");
+		}
+
+		brightnessHelperWindows = new BrightnessHelper();
 		thinkLightHelper = new ThinkLightHelper();
 		thinkLightHelper.checkForDLL();
+
 
 //todo move functionallity to exclude method calls from LightHelper over here
 		//so we free up the resources if device is not a thinkpad or does not have necessry features installed
@@ -89,7 +104,7 @@ public class AndroidActuator {
 			if (lightSwitched==false) {
 				lightSwitched=true;
 				thinkLightHelper.switchThinkLight();
-				brightnessHelper.setBrightness(100);
+				brightnessHelperWindows.setBrightness(100);
 				System.out.println("Now light value is over 0 lux, Switch ON");
 				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
 				System.out.println("LIGHT is ON");
@@ -104,7 +119,7 @@ public class AndroidActuator {
 			if (lightSwitched == false) {
 				lightSwitched = true;
 				thinkLightHelper.switchThinkLight();
-				brightnessHelper.setBrightness(95);
+				brightnessHelperWindows.setBrightness(95);
 				System.out.println("Now light value is over 50 lux, Switch ON");
 				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
 			}
@@ -119,12 +134,12 @@ public class AndroidActuator {
 				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
 				lightSwitched=false;
 				thinkLightHelper.switchThinkLight();
-				brightnessHelper.setBrightness(85);
+				brightnessHelperWindows.setBrightness(85);
 				System.out.println(lightSwitched +"Licht ist aus");
 			}
 			if (lightSwitched==false && sensorValues.getAmbientlight() > 200) {
                 System.out.println("last trigger light out over 200 lux");
-				brightnessHelper.setBrightness(85);
+				brightnessHelperWindows.setBrightness(85);
 				return;
 			}
 		System.out.println("============================");
