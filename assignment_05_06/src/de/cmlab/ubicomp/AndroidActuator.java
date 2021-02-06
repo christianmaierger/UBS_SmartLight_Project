@@ -3,9 +3,7 @@ package de.cmlab.ubicomp;
 import de.cmlab.ubicomp.lib.SensorUDPReceiver;
 import de.cmlab.ubicomp.lib.model.AndroidSensor;
 
-import javax.usb.UsbException;
-import javax.usb.UsbHostManager;
-import javax.usb.UsbServices;
+
 import java.awt.*;
 import java.time.Duration;
 import java.util.concurrent.ArrayBlockingQueue;
