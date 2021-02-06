@@ -13,15 +13,6 @@ public class ThinkLightHelper {
     private String dllFileUsed;
     private String runDll32 = "C:\\Windows\\System32\\Rundll32.exe";
     private Process process;
-    private boolean noThinkLight=false;
-
-    public boolean isNoThinkLight() {
-        return noThinkLight;
-    }
-
-    public void setNoThinkLight(boolean noThinkLight) {
-        this.noThinkLight = noThinkLight;
-    }
 
 
     /**
@@ -29,7 +20,7 @@ public class ThinkLightHelper {
      * a reserch by the author revealed
      */
 
-    public void checkForDLL() {
+    public boolean checkForDLL() {
         File f = new File(dll1.replace(",ThinkLight",""));
         File f2 = new File(dll2.replace(",ThinkLight",""));
         if (f.exists() && f.isFile()) {
@@ -37,9 +28,9 @@ public class ThinkLightHelper {
         } else if (f2.exists() && f2.isFile()) {
             dllFileUsed = dll2;
         } else {
-            noThinkLight=true;
+             return true;
         }
-
+        return false;
     }
 
     // note, there must be another way to work with hw controler of keyboard, but this is way over my understanding
@@ -48,9 +39,6 @@ public class ThinkLightHelper {
      * uses a pretty hacky way to execute a dll, that controlls the state of the ThinkLight
      */
     public void switchThinkLight() {
-        if (noThinkLight == true) {
-            return;
-        }
 
         try {
             process = new ProcessBuilder(runDll32, dllFileUsed).start();

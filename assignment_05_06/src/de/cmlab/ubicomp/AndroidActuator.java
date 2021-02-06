@@ -4,12 +4,6 @@ import de.cmlab.ubicomp.lib.SensorUDPReceiver;
 import de.cmlab.ubicomp.lib.model.AndroidSensor;
 
 
-import java.awt.*;
-import java.time.Duration;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import static com.sun.javafx.PlatformUtil.isWindows;
 import static com.sun.javafx.util.Utils.isUnix;
 
@@ -40,21 +34,19 @@ public class AndroidActuator {
 
 		if(isWindows()) {
 			System.out.println("System is Windows");
+			brightnessHelperWindows = new BrightnessHelper();
+			this.osIsWindows=true;
 		} else if(isUnix()) {
+			this.osIsUnix=true;
+			//osBrightnessHelper erstellen
 			System.out.println("System is Windows");
 		}
 
-		brightnessHelperWindows = new BrightnessHelper();
+
 		thinkLightHelper = new ThinkLightHelper();
-		thinkLightHelper.checkForDLL();
+		// check returns true if no dll is found
+		skipThinkLight = thinkLightHelper.checkForDLL();
 
-
-//todo move functionallity to exclude method calls from LightHelper over here
-		//so we free up the resources if device is not a thinkpad or does not have necessry features installed
-
-		if(thinkLightHelper.isNoThinkLight()) {
-             skipThinkLight=true;
-		}
 
 		start = System.currentTimeMillis();
 	}
@@ -67,15 +59,11 @@ public class AndroidActuator {
 	public static void main(String[] args){
 		/*initiate a receiver by defining a port
 		number that will be sent to the receiver from the app*/
-
-		//das ist ja die erste Klasse die erzeugt wird, die dann wiederum einen async ausgeführten thread startet, der ständig
-		// per while true daten sendet
 		SensorUDPReceiver receiver = new SensorUDPReceiver(5000);
 		/*create a listener as shown below and let it implement Observer to
 		to get the app updates*/
 		SensorUDPListener listener = new SensorUDPListener();
 		receiver.addObserver(listener);
-
 	}
 
 	/**
@@ -83,8 +71,8 @@ public class AndroidActuator {
 	 * on windows systems and controls the led built into ThinkPads
 	 *
 	 * params sensorValues the values send via UDP from the sensor/smartphone
+	 *
 	 **/
-
 	public void lightActuator(AndroidSensor sensorValues) {
 
 		// way to get results just every x milis, put the amount in the if clause
@@ -101,8 +89,13 @@ public class AndroidActuator {
 
 			if (lightSwitched==false) {
 				lightSwitched=true;
-				thinkLightHelper.switchThinkLight();
-				brightnessHelperWindows.setBrightness(100);
+
+				if (!skipThinkLight) {
+					thinkLightHelper.switchThinkLight();
+				}
+				if (osIsWindows) {
+					brightnessHelperWindows.setBrightness(100);
+				}
 				System.out.println("Now light value is over 0 lux, Switch ON");
 				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
 				System.out.println("LIGHT is ON");
@@ -116,8 +109,12 @@ public class AndroidActuator {
 		if (sensorValues.getAmbientlight() >= 50 && sensorValues.getAmbientlight() < 120) {
 			if (lightSwitched == false) {
 				lightSwitched = true;
-				thinkLightHelper.switchThinkLight();
-				brightnessHelperWindows.setBrightness(95);
+				if (!skipThinkLight) {
+					thinkLightHelper.switchThinkLight();
+				}
+				if (osIsWindows) {
+					brightnessHelperWindows.setBrightness(95);
+				}
 				System.out.println("Now light value is over 50 lux, Switch ON");
 				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
 			}
@@ -131,13 +128,22 @@ public class AndroidActuator {
 			if (lightSwitched==true && sensorValues.getAmbientlight() > 120) {
 				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
 				lightSwitched=false;
-				thinkLightHelper.switchThinkLight();
-				brightnessHelperWindows.setBrightness(85);
+
+				if (!skipThinkLight) {
+					thinkLightHelper.switchThinkLight();
+				}
+
+
+				if (osIsWindows) {
+					brightnessHelperWindows.setBrightness(85);
+				}
 				System.out.println(lightSwitched +"Licht ist aus");
 			}
 			if (lightSwitched==false && sensorValues.getAmbientlight() > 200) {
                 System.out.println("last trigger light out over 200 lux");
-				brightnessHelperWindows.setBrightness(85);
+				if (osIsWindows) {
+					brightnessHelperWindows.setBrightness(85);
+				}
 				return;
 			}
 		System.out.println("============================");
