@@ -26,6 +26,7 @@ public class AndroidActuator {
 	private boolean osIsUnix;
 	//check for space of file to be executed to control ThinkLight
 	private boolean skipThinkLight=false;
+	private boolean shutDown = false;
 
 
 	public AndroidActuator() {
@@ -39,7 +40,7 @@ public class AndroidActuator {
 		} else if(isUnix()) {
 			this.osIsUnix=true;
 			//osBrightnessHelper erstellen
-			System.out.println("System is Windows");
+			System.out.println("System is Unix");
 		}
 
 
@@ -56,14 +57,18 @@ public class AndroidActuator {
 	 * Just main class to start whole process
 	 */
 
-	public static void main(String[] args){
+	public void startUp(){
 		/*initiate a receiver by defining a port
 		number that will be sent to the receiver from the app*/
 		SensorUDPReceiver receiver = new SensorUDPReceiver(5000);
 		/*create a listener as shown below and let it implement Observer to
 		to get the app updates*/
-		SensorUDPListener listener = new SensorUDPListener();
+		SensorUDPListener listener = new SensorUDPListener(this);
 		receiver.addObserver(listener);
+	}
+
+	public void shutDown(){
+			System.exit(0);
 	}
 
 	/**
@@ -75,15 +80,20 @@ public class AndroidActuator {
 	 **/
 	public void lightActuator(AndroidSensor sensorValues) {
 
-		if (checkForTimeElapsed()) return;
+		if(!shutDown) {
 
-		lowLightHandler(sensorValues);
+			if (checkForTimeElapsed()) return;
 
-		littleLightHandler(sensorValues);
-		
-		normalLightHandler(sensorValues);
+			lowLightHandler(sensorValues);
 
-		highLightHandler(sensorValues);
+			littleLightHandler(sensorValues);
+
+			normalLightHandler(sensorValues);
+
+			highLightHandler(sensorValues);
+		} else {
+			System.out.println("Should be down now");
+		}
 	}
 
 	private void highLightHandler(AndroidSensor sensorValues) {
@@ -111,7 +121,7 @@ public class AndroidActuator {
 
 
 				if (osIsWindows) {
-					brightnessHelperWindows.setBrightness(85);
+					brightnessHelperWindows.setBrightness(90);
 				}
 				System.out.println(lightSwitched +"Licht ist aus");
 			}
@@ -125,7 +135,7 @@ public class AndroidActuator {
 					thinkLightHelper.switchThinkLight();
 				}
 				if (osIsWindows) {
-					brightnessHelperWindows.setBrightness(95);
+					brightnessHelperWindows.setBrightness(100);
 				}
 				System.out.println("Now light value is over 50 lux, Switch ON");
 				System.out.println("the exact value is: " + sensorValues.getAmbientlight());

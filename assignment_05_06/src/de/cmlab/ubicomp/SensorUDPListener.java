@@ -11,10 +11,11 @@ import java.util.Observer;
  * class we got from the course
  */
 public class SensorUDPListener implements Observer {
-    AndroidActuator test = new AndroidActuator();
+   AndroidActuator actuator;
 
-    public SensorUDPListener() {
+    public SensorUDPListener(AndroidActuator actuator) {
         // TODO Auto-generated constructor stub
+        actuator=actuator;
     }
 
     @Override
@@ -25,6 +26,6 @@ public class SensorUDPListener implements Observer {
         AndroidSensor sensorValues = (AndroidSensor) arg;
 
 
-        test.lightActuator(sensorValues);
+        actuator.lightActuator(sensorValues);
     }
 }
