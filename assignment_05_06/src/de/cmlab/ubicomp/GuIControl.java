@@ -1,4 +1,4 @@
-package sample;
+package e.cmlab.ubicomp;
 
 import de.cmlab.ubicomp.AndroidActuator;
 import javafx.application.Application;
@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 import javafx.scene.control.Button;
 
 
-public class Main extends Application {
+public class GuIControl extends Application {
 
     boolean lightsOn;
 
