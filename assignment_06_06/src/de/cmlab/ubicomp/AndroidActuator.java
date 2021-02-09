@@ -17,7 +17,7 @@ import static com.sun.javafx.util.Utils.isUnix;
 
 public class AndroidActuator {
 	private boolean lightSwitched;
-	private BrightnessHelper brightnessHelperWindows;
+	private WindowsBrightnessHelper windowsBrightnessHelperWindows;
 	private ThinkLightHelper thinkLightHelper;
 	// checks for starting time of programm
 	private long start;
@@ -35,7 +35,7 @@ public class AndroidActuator {
 
 		if(isWindows()) {
 			System.out.println("System is Windows");
-			brightnessHelperWindows = new BrightnessHelper();
+			windowsBrightnessHelperWindows = new WindowsBrightnessHelper();
 			this.osIsWindows=true;
 		} else if(isUnix()) {
 			this.osIsUnix=true;
@@ -79,8 +79,8 @@ public class AndroidActuator {
 		if (!skipThinkLight && lightSwitched==true) {
 			thinkLightHelper.switchThinkLight();
 		}
-		if (osIsWindows) {
-			brightnessHelperWindows.setBrightness(100);
+		if (osIsWindows && !windowsBrightnessHelperWindows.graphicsDriverDoesNotSUpportPSCommand) {
+				windowsBrightnessHelperWindows.setBrightness(100, true);
 		}
 
 			System.exit(0);
@@ -112,7 +112,7 @@ public class AndroidActuator {
 		if (lightSwitched==false && sensorValues.getAmbientlight() > 200) {
                 System.out.println("last trigger light out over 200 lux");
 				if (osIsWindows) {
-					brightnessHelperWindows.setBrightness(85);
+					windowsBrightnessHelperWindows.setBrightness(85, false);
 				}
 			return;
 			}
@@ -133,7 +133,7 @@ public class AndroidActuator {
 
 
 				if (osIsWindows) {
-					brightnessHelperWindows.setBrightness(90);
+					windowsBrightnessHelperWindows.setBrightness(90, false);
 				}
 				System.out.println(lightSwitched +"Licht ist aus");
 			}
@@ -147,7 +147,7 @@ public class AndroidActuator {
 					thinkLightHelper.switchThinkLight();
 				}
 				if (osIsWindows) {
-					brightnessHelperWindows.setBrightness(100);
+					windowsBrightnessHelperWindows.setBrightness(100, false);
 				}
 				System.out.println("Now light value is over 50 lux, Switch ON");
 				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
@@ -169,7 +169,7 @@ public class AndroidActuator {
 					thinkLightHelper.switchThinkLight();
 				}
 				if (osIsWindows) {
-					brightnessHelperWindows.setBrightness(100);
+					windowsBrightnessHelperWindows.setBrightness(100, false);
 				}
 				System.out.println("Now light value is over 0 lux, Switch ON");
 				System.out.println("the exact value is: " + sensorValues.getAmbientlight());

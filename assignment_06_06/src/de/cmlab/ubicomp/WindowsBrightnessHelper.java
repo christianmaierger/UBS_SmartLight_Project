@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
  * Helps to adjust the brightness of the screen for windows systems
  */
 
-public class BrightnessHelper {
+public class WindowsBrightnessHelper {
     boolean graphicsDriverDoesNotSUpportPSCommand = false;
 
 
@@ -18,7 +18,7 @@ public class BrightnessHelper {
      *
      * @param brightness value of screen brightness from 0-100
      */
-    public void setBrightness(int brightness) {
+    public void setBrightness(int brightness, boolean noErrorLog) {
 
         if (graphicsDriverDoesNotSUpportPSCommand) {
             return;
@@ -52,7 +52,7 @@ public class BrightnessHelper {
                 powerShell.getErrorStream()));
         try {
             line = stderr.readLine();
-            if (line != null) {
+            if (line != null && !noErrorLog) {
                 System.err.println("This Windows Screen Driver does not support Get-WMI Command");
                 // try to not call get-wmi again to prevent errors
                 graphicsDriverDoesNotSUpportPSCommand=true;
