@@ -4,6 +4,9 @@ import de.cmlab.ubicomp.lib.SensorUDPReceiver;
 import de.cmlab.ubicomp.lib.model.AndroidSensor;
 
 
+import javax.swing.*;
+
+import static com.sun.javafx.PlatformUtil.isMac;
 import static com.sun.javafx.PlatformUtil.isWindows;
 import static com.sun.javafx.util.Utils.isUnix;
 
@@ -41,6 +44,8 @@ public class AndroidActuator {
 			this.osIsUnix=true;
 			//osBrightnessHelper erstellen
 			System.out.println("System is Unix");
+		} else if (isMac()) {
+			System.out.println("System is Mac");
 		}
 
 
@@ -58,6 +63,11 @@ public class AndroidActuator {
 	 */
 
 	public void startUp(){
+	 if (isMac()) {
+		JOptionPane.showMessageDialog(null, "Sry Mac OS is not supported so far");
+		 System.exit(0);
+	}
+	 
 		/*initiate a receiver by defining a port
 		number that will be sent to the receiver from the app*/
 		SensorUDPReceiver receiver = new SensorUDPReceiver(5000);
