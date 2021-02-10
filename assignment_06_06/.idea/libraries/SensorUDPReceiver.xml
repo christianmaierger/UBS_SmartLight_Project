@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="SensorUDPReceiver">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/de/cmlab/ubicomp/lib/SensorUDPReceiver.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
