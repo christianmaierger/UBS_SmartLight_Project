@@ -23,17 +23,17 @@ public class UnixBrightnessHelper {
             return;
         }
         // tested command line:
-        // ( screenname=$(xrandr | grep ' connected' | cut -f1 -d ' ') && xrandr --output $screenname --brightness 0.7 )
+        // ( xterm && screenname=$(xrandr | grep ' connected' | cut -f1 -d ' ') && xrandr --output $screenname --brightness 0.7 )
 
         String command = new String();
 
         command = String.format("$brightness = %d;", brightness)
-                + "( " +
+                + "&& " +
                 "screenname=$(xrandr | grep \' connected\' |cut -f1 -d \' \') " +
                 " && " +
                 "xrandr --output $screenname --brightness $brightness; )";
 
-        command = "xterm " + command;
+        command = "( xterm " + command;
 
         Process pr = null;
         try {
