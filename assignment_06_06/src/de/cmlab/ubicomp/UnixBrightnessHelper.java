@@ -28,7 +28,7 @@ public class UnixBrightnessHelper {
         String command = new String();
 
         command = String.format("$brightness = %d;", brightness)
-                + "&& " +
+                + "& " +
                 "screenname=$(xrandr | grep \' connected\' |cut -f1 -d \' \') " +
                 " && " +
                 "xrandr --output $screenname --brightness $brightness; )";
