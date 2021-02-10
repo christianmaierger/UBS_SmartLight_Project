@@ -23,10 +23,11 @@ public class UnixBrightnessHelper {
             return;
         }
         // tested command line:
-        // ( xterm && screenname=$(xrandr | grep ' connected' | cut -f1 -d ' ') && xrandr --output $screenname --brightness 0.7 )
+        // ( xterm & screenname=$(xrandr | grep ' connected' | cut -f1 -d ' ') && xrandr --output $screenname --brightness 0.7 )
 
         String command = new String();
 
+        //do not change whitespace! Special syntax to concat and execute commands on bash
         command = String.format("$brightness = %d;", brightness)
                 + "& " +
                 "screenname=$(xrandr | grep \' connected\' |cut -f1 -d \' \') " +
