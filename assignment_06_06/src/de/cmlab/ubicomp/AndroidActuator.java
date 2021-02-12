@@ -21,6 +21,7 @@ import static com.sun.javafx.util.Utils.isUnix;
 public class AndroidActuator {
 	private boolean lightSwitched;
 	private WindowsBrightnessHelper windowsBrightnessHelperWindows;
+	private UnixBrightnessHelper unixBrightnessHelper;
 	private ThinkLightHelper thinkLightHelper;
 	// checks for starting time of programm
 	private long start;
@@ -41,9 +42,9 @@ public class AndroidActuator {
 			windowsBrightnessHelperWindows = new WindowsBrightnessHelper();
 			this.osIsWindows=true;
 		} else if(isUnix()) {
-			this.osIsUnix=true;
-			//osBrightnessHelper erstellen
 			System.out.println("System is Unix");
+			unixBrightnessHelper = new UnixBrightnessHelper();
+			this.osIsUnix=true;
 		} else if (isMac()) {
 			System.out.println("System is Mac");
 		}
@@ -63,11 +64,11 @@ public class AndroidActuator {
 	 */
 
 	public void startUp(){
-	 if (isMac()) {
-		JOptionPane.showMessageDialog(null, "Sry Mac OS is not supported so far");
-		 System.exit(0);
-	}
-	 
+		if (isMac()) {
+			JOptionPane.showMessageDialog(null, "Sry Mac OS is not supported so far");
+			System.exit(0);
+		}
+
 		/*initiate a receiver by defining a port
 		number that will be sent to the receiver from the app*/
 		SensorUDPReceiver receiver = new SensorUDPReceiver(5000);
@@ -90,10 +91,12 @@ public class AndroidActuator {
 			thinkLightHelper.switchThinkLight();
 		}
 		if (osIsWindows && !windowsBrightnessHelperWindows.graphicsDriverDoesNotSUpportPSCommand) {
-				windowsBrightnessHelperWindows.setBrightness(100, true);
+			windowsBrightnessHelperWindows.setBrightness(100, true);
 		}
-
-			System.exit(0);
+		if (osIsUnix && !unixBrightnessHelper.graphicsDriverDoesNotSUpportPSCommand) {
+			unixBrightnessHelper.setBrightness(1, true);
+		}
+		System.exit(0);
 
 	}
 
@@ -107,25 +110,28 @@ public class AndroidActuator {
 	public void lightActuator(AndroidSensor sensorValues) {
 
 
-			if (checkForTimeElapsed()) return;
+		if (checkForTimeElapsed()) return;
 
-			lowLightHandler(sensorValues);
+		lowLightHandler(sensorValues);
 
-			littleLightHandler(sensorValues);
+		littleLightHandler(sensorValues);
 
-			normalLightHandler(sensorValues);
+		normalLightHandler(sensorValues);
 
-			highLightHandler(sensorValues);
+		highLightHandler(sensorValues);
 	}
 
 	private void highLightHandler(AndroidSensor sensorValues) {
 		if (lightSwitched==false && sensorValues.getAmbientlight() > 200) {
-                System.out.println("last trigger light out over 200 lux");
-				if (osIsWindows) {
-					windowsBrightnessHelperWindows.setBrightness(85, false);
-				}
-			return;
+			System.out.println("last trigger light out over 200 lux");
+			if (osIsWindows) {
+				windowsBrightnessHelperWindows.setBrightness(85, false);
 			}
+			if (osIsUnix){
+				unixBrightnessHelper.setBrightness(0.85f, false);
+			}
+			return;
+		}
 		System.out.println("============================");
 		System.out.println("Licht ist  : " + lightSwitched);
 		System.out.println("the exact value is: " + sensorValues.getAmbientlight());
@@ -134,19 +140,22 @@ public class AndroidActuator {
 
 	private void normalLightHandler(AndroidSensor sensorValues) {
 		if (lightSwitched==true && sensorValues.getAmbientlight() > 120) {
-				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
-				lightSwitched=false;
+			System.out.println("the exact value is: " + sensorValues.getAmbientlight());
+			lightSwitched=false;
 
-				if (!skipThinkLight) {
-					thinkLightHelper.switchThinkLight();
-				}
-
-
-				if (osIsWindows) {
-					windowsBrightnessHelperWindows.setBrightness(90, false);
-				}
-				System.out.println(lightSwitched +"Licht ist aus");
+			if (!skipThinkLight) {
+				thinkLightHelper.switchThinkLight();
 			}
+
+
+			if (osIsWindows) {
+				windowsBrightnessHelperWindows.setBrightness(90, false);
+			}
+			if (osIsUnix) {
+				unixBrightnessHelper.setBrightness(0.90f, false);
+			}
+			System.out.println(lightSwitched +"Licht ist aus");
+		}
 	}
 
 	private void littleLightHandler(AndroidSensor sensorValues) {
@@ -158,6 +167,9 @@ public class AndroidActuator {
 				}
 				if (osIsWindows) {
 					windowsBrightnessHelperWindows.setBrightness(100, false);
+				}
+				if (osIsUnix) {
+					unixBrightnessHelper.setBrightness(1.0f, false);
 				}
 				System.out.println("Now light value is over 50 lux, Switch ON");
 				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
@@ -180,6 +192,9 @@ public class AndroidActuator {
 				}
 				if (osIsWindows) {
 					windowsBrightnessHelperWindows.setBrightness(100, false);
+				}
+				if (osIsUnix) {
+					unixBrightnessHelper.setBrightness(1.0f, false);
 				}
 				System.out.println("Now light value is over 0 lux, Switch ON");
 				System.out.println("the exact value is: " + sensorValues.getAmbientlight());
