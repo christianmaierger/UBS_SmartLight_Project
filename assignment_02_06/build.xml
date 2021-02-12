@@ -1,0 +1,128 @@
+<!-- HCI Group: Ubiquitous Computing Assignments -->
+<!-- University of Bamberg, Prof. Dr. Tom Gross, Anna-Lena Müller -->
+<!-- Group 6, Christian Maier, Paul MÜller, Jessie Dos Santos, Corina Lehmann -->
+<!-- Build file for the UbiComp assignment: 2. XML-RPC -->
+<!-- ************************************************************ -->
+
+<project name="XML-RPC-interaction>" default="compile" basedir=".">
+	<description>
+		Get familiar with XML-RPC: a simple server-client-interaction to calculate numbers
+    </description>
+    
+    <!-- environment variables -->
+	<property name="src" value="./src"/>
+	<property name="build" value="./build"/>
+	<property name="lib" location="./lib"/>
+    <property name="doc" value="./doc"/>
+    <property name="dist" value="./dist"/>
+    <property name="src.files" value="./lib/xmlrpc-1.2-b1.jar"/>
+    <!--main classes-->
+    <property name="main-server" value="de.cmlab.ubicomp.server.JavaServer"/>
+    <property name="main-client" value="de.cmlab.ubicomp.client.JavaClient"/>
+   
+    <!--classpaths per target-->
+    <path id="compile.classpath">
+         <!--get jar archives-->
+        <fileset dir="${lib}" includes="**/*.jar"/>
+    </path>
+    
+    <path id="run.classpath">
+        <!--get jar archives-->
+         <fileset dir="${lib}" includes="**/*.jar"/>
+    </path>
+     
+    
+	<target name="prepare">
+		<!-- create directories -->
+        <tstamp/>
+		<mkdir dir="${build}"/>
+        <mkdir dir="${doc}"/>
+        <mkdir dir="${dist}"/>
+        <mkdir dir="${build}/de/cmlab/ubicomp"/>
+	</target>
+    
+    
+    <target name="compile" depends="prepare">
+        <!--depends on prepare target and compiles files from src directory to generate binary .class files in destination directory build -->
+        <javac srcdir="${src}" destdir="${build}" includeantruntime="${src.files}"> 
+            <classpath refid="compile.classpath"/>
+        </javac>
+    </target>
+    
+    
+    <target name="jar.server" depends="compile">
+		<!--depends on compile target, generates .jar-archive of JavaServer and saves it at destination directory dist -->
+        <jar destfile="${dist}/de.cmlab.ubicomp.ant.server.JavaServer.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Built-By" value="${group6}"/>
+				<attribute name="Main-Class" value="${main-server}"/>
+			</manifest>
+		</jar>
+	</target>
+    
+    <target name="jar.client" depends="compile">
+		<!--depends on compile target, generates .jar-archive of JavaClient and saves it at destination directory dist -->
+        <jar destfile="${dist}/de.cmlab.ubicomp.ant.client.JavaClient.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Built-By" value="${group6}"/>
+				<attribute name="Main-Class" value="${main-client}"/>
+			</manifest>
+		</jar>
+	</target>
+    
+    <target name="run.server" depends="compile"  description="Start Server">
+         <!--depends on compile and runs server class-->
+        <parallel>
+            <java classname="de.cmlab.ubicomp.server.JavaServer" fork="true">
+                <classpath>
+                    <path refid="run.classpath"/>
+                    <path location="${build}"/>
+                </classpath>
+            </java>
+        </parallel>
+    </target>
+    
+    <target name="run.client" depends="compile"  description="Start Client">        
+        <!--depends on compile and runs client class-->
+        <parallel>
+            <java classname="de.cmlab.ubicomp.client.JavaClient" fork="true">
+                 <classpath>
+                    <path refid="run.classpath"/>
+                    <path location="${build}"/>
+                </classpath>
+            </java>
+        </parallel>
+    </target>
+
+    
+	<target name="clean" description="clean up">
+		<!-- delete old directories, before starting -->
+        <delete dir="${build}"/>
+        <delete dir="${doc}"/>
+        <delete dir="${dist}"/>
+	</target>
+
+    
+	<target name="javadoc">
+		 <!-- create javadoc -->
+        <javadoc
+			destdir="${doc}"
+			access="public"
+			source="1.8"
+			use="true"
+			notree="false"
+			nonavbar="false"
+			noindex="false"
+			splitindex="true"
+			author="true"
+			version="true"
+			packagenames="de.cmlab.ubicomp.*"
+			sourcepath="src">
+			<link href="http://docs.oracle.com/javase/8/docs/api/"/>
+		</javadoc>
+	</target>
+    
+    <!-- target "all" normally makes all our wishes come true, but for this assignment you need to run targets separatly (run.client and run.server start in separate terminals) -->
+	<target name="all" depends="clean,prepare,compile,jar.server,jar.client,run.server, run.client,javadoc"/>
+
+</project>
